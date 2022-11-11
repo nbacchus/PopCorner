@@ -25,12 +25,3 @@ This MERN Stack project use Apollo client to manage GrahpQL, Mongoose, NodeJs am
 
 This app is deployed in Heroku.
 [Click Here](https://mern-book-search-engine-pro.herokuapp.com) to view the demo app.
-
-
-## Questions
-
-Please send your questions [here](mailto:cristobal@barberis.com?subject=[GitHub]%20Mern%20Book%20Search%20Engine%20Pro) or visit [github/brberis](https://github.com/brberis).
-
-## Credits
-
-* Cristobal A Barberis%      
