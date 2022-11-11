@@ -5,13 +5,13 @@ import { SAVE_BOOK } from '../utils/mutations';
 import { useQuery, useMutation } from '@apollo/client';
 
 import Auth from '../utils/auth';
-import { searchGoogleBooks } from '../utils/API';
+import { searchMovie } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 
 const SearchBooks = () => {
 
   const userData = useQuery(QUERY_ME);
-  
+
   // holding returned google api data
   const [searchedBooks, setSearchedBooks] = useState([]);
   // holding our search field data
@@ -22,7 +22,7 @@ const SearchBooks = () => {
 
   const [saveBook] = useMutation(SAVE_BOOK, {
     refetchQueries: [
-      {query: QUERY_ME}
+      { query: QUERY_ME }
     ]
   });
 
@@ -37,9 +37,8 @@ const SearchBooks = () => {
     if (!searchInput) {
       return false;
     }
-
     try {
-      const response = await searchGoogleBooks(searchInput);
+      const response = await searchMovie(searchInput);
 
       if (!response.ok) {
         throw new Error('something went wrong!');
@@ -47,13 +46,16 @@ const SearchBooks = () => {
 
       const { items } = await response.json();
 
+      console.log(items);
+
       const bookData = items.map((book) => ({
         bookId: book.id,
-        authors: book.volumeInfo.authors || ['No author to display'],
-        title: book.volumeInfo.title,
-        description: book.volumeInfo.description,
-        image: book.volumeInfo.imageLinks?.thumbnail || '',
-        link: book.volumeInfo.canonicalVolumeLink
+        name: book.name
+        // authors: book.volumeInfo.authors || ['No author to display'],
+        // title: book.volumeInfo.title,
+        // description: book.volumeInfo.description,
+        // image: book.volumeInfo.imageLinks?.thumbnail || '',
+        // link: book.volumeInfo.canonicalVolumeLink
       }));
 
       setSearchedBooks(bookData);
@@ -76,13 +78,13 @@ const SearchBooks = () => {
 
     try {
       await saveBook({
-        variables: { 
-          userId: userData.data?.me._id, 
-          authors: bookToSave.authors, 
-          description: bookToSave.description, 
-          bookId: bookToSave.bookId, 
-          image: bookToSave.image, 
-          link: bookToSave.link, 
+        variables: {
+          userId: userData.data?.me._id,
+          authors: bookToSave.authors,
+          description: bookToSave.description,
+          bookId: bookToSave.bookId,
+          image: bookToSave.image,
+          link: bookToSave.link,
           title: bookToSave.title
         }
       });
@@ -129,6 +131,7 @@ const SearchBooks = () => {
           {searchedBooks.map((book) => {
             return (
               <Card key={book.bookId} border='dark'>
+                <p>{book.name}</p>
                 {book.image ? (
                   <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' />
                 ) : null}

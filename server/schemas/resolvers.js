@@ -44,11 +44,11 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    saveBook: async (parent, { userId, authors, description, bookId, image, link, title }, context) => {
+    saveShow: async (parent, { userId, name, genre, image, url, summary, showId }, context) => {
       if (context.user) {
         const updatedUser = await User.findOneAndUpdate(
           { _id: userId },
-          { $push: { savedBooks: { authors, description, bookId, image, link, title } } },
+          { $push: { savedShows: { name, genre, image, url, summary, showId } } },
           { new: true, runValidators: true }
         );
 
@@ -57,11 +57,11 @@ const resolvers = {
 
       throw new AuthenticationError('You need to be logged in!');
     },
-    removeBook: async (parent, { userId, bookId }, context) => {
+    removeShow: async (parent, { userId, showId }, context) => {
       if (context.user) {
         const updatedUser = await User.findOneAndUpdate(
           { _id: userId },
-          { $pull: { savedBooks: { bookId: bookId } } },
+          { $pull: { savedShows: { showId: showId } } },
           { new: true, runValidators: false }
         );
 
@@ -69,9 +69,9 @@ const resolvers = {
       }
 
       throw new AuthenticationError('You need to be logged in!');
-    }   
+    }
   }
-  };
-  
+};
+
 
 module.exports = resolvers;
