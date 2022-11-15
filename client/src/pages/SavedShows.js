@@ -2,20 +2,20 @@ import React from 'react';
 import { useMutation } from '@apollo/client';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 import { QUERY_ME } from '../utils/queries';
-import { REMOVE_BOOK } from '../utils/mutations';
-import { removeBookId } from '../utils/localStorage';
+import { REMOVE_SHOW } from '../utils/mutations';
+import { removeShowId } from '../utils/localStorage';
 import { useQuery } from '@apollo/client';
 
 
-const SavedBooks = () => {
+const SavedShows = () => {
 
   const { loading, data: userData } = useQuery(QUERY_ME);
 
-  const savedBooks = userData?.me.savedBooks;
+  const savedShows = userData?.me.savedShows;
 
-  const [removeBook] = useMutation(REMOVE_BOOK, {
+  const [removeShow] = useMutation(REMOVE_SHOW, {
     refetchQueries: [
-      {query: QUERY_ME}
+      { query: QUERY_ME }
     ]
   });
 
@@ -23,13 +23,13 @@ const SavedBooks = () => {
     return <div>Loading...</div>;
   }
 
-  const handleDeleteBook = async (bookId) => {
+  const handleDeleteShow = async (showId) => {
 
     try {
-      const { data } = await removeBook({
-        variables: { userId: userData.me._id, bookId: bookId  }
+      const { data } = await removeShow({
+        variables: { userId: userData.me._id, showId: showId }
       });
-      removeBookId(bookId);
+      removeShowId(showId);
     } catch (e) {
       console.error(e);
     }
@@ -39,29 +39,29 @@ const SavedBooks = () => {
     <>
       <Jumbotron fluid className='text-light bg-dark'>
         <Container>
-          <h1>Viewing saved books!</h1>
+          <h1>Viewing saved shows!</h1>
         </Container>
       </Jumbotron>
       <Container>
         <h2>
-          {savedBooks.length
-            ? `Viewing ${savedBooks.length} saved ${savedBooks.length === 1 ? 'book' : 'books'}:`
-            : 'You have no saved books!'}
+          {savedShows.length
+            ? `Viewing ${savedShows.length} saved ${savedShows.length === 1 ? 'show' : 'shows'}:`
+            : 'You have no saved shows!'}
         </h2>
         <CardColumns>
-          {savedBooks.map((book) => {
+          {savedShows.map((show) => {
             return (
-              <Card key={book.bookId} border='dark'>
-                {book.image ? <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' /> : null}
+              <Card key={show.showId} border='dark'>
+                {show.image ? <Card.Img src={show.image} alt={`The cover for ${show.name}`} variant='top' /> : null}
                 <Card.Body>
-                  <Card.Title>{book.title}</Card.Title>
-                  <p className='small'>Authors: {book.authors}</p>
-                  <Card.Text>{book.description}</Card.Text>
-                  <Button className='btn-block btn-danger' onClick={() => handleDeleteBook(book.bookId)}>
-                    Delete this Book!
+                  <Card.Title>{show.name}</Card.Title>
+                  <p className='small'>Genre: {show.genre}</p>
+                  <Card.Text>{show.summary}</Card.Text>
+                  <Button className='btn-block btn-danger' onClick={() => handleDeleteShow(show.showId)}>
+                    Delete this Show!
                   </Button>
                   <div className='google-link'>
-                    <a href={book.link} target='_blank' rel='noopener noreferrer'>View in Google Books</a>
+                    <a href={show.url} target='_blank' rel='noopener noreferrer'>View in TVMaze</a>
                   </div>
                 </Card.Body>
               </Card>
@@ -73,4 +73,4 @@ const SavedBooks = () => {
   );
 };
 
-export default SavedBooks;
+export default SavedShows;
