@@ -14,5 +14,16 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^5.1.0"
+  },
+  "dependencies": {
+    "ansi-styles": "^6.2.1",
+    "bootstrap": "^5.2.2",
+    "color-convert": "^2.0.1",
+    "dequal": "^2.0.3",
+    "escape-string-regexp": "^5.0.0",
+    "has-flag": "^5.0.1",
+    "react-bootstrap": "^2.6.0",
+    "regenerator-runtime": "^0.13.10",
+    "supports-color": "^9.2.3"
   }
 }
