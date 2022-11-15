@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, Col, Form, Button, Card, CardColumns } from 'react-bootstrap';
 import { QUERY_ME } from '../utils/queries';
-import { SAVE_BOOK } from '../utils/mutations';
+import { SAVE_SHOW } from '../utils/mutations';
 import { useQuery, useMutation } from '@apollo/client';
 
 import Auth from '../utils/auth';
-import { searchMovie } from '../utils/API';
-import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
+import { searchShow } from '../utils/API';
+import { saveShowId, getSavedShowIds } from '../utils/localStorage';
 
-const SearchBooks = () => {
+const SearchShows = () => {
 
   const userData = useQuery(QUERY_ME);
 
   // holding returned google api data
-  const [searchedBooks, setSearchedBooks] = useState([]);
+  const [searchedShows, setSearchedShows] = useState([]);
   // holding our search field data
   const [searchInput, setSearchInput] = useState('');
 
   // hold saved bookId values
-  const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
+  const [savedShowIds, setSavedShowIds] = useState(getSavedShowIds());
 
-  const [saveBook] = useMutation(SAVE_BOOK, {
+  const [saveShow] = useMutation(SAVE_SHOW, {
     refetchQueries: [
       { query: QUERY_ME }
     ]
@@ -28,7 +28,7 @@ const SearchBooks = () => {
 
 
   useEffect(() => {
-    return () => saveBookIds(savedBookIds);
+    return () => saveShowId(savedShowIds);
   });
 
   const handleFormSubmit = async (event) => {
@@ -38,7 +38,7 @@ const SearchBooks = () => {
       return false;
     }
     try {
-      const response = await searchMovie(searchInput);
+      const response = await searchShow(searchInput);
 
       if (!response.ok) {
         throw new Error('something went wrong!');
@@ -48,17 +48,16 @@ const SearchBooks = () => {
 
       console.log(items);
 
-      const bookData = items.map((book) => ({
-        bookId: book.id,
-        name: book.name
-        // authors: book.volumeInfo.authors || ['No author to display'],
-        // title: book.volumeInfo.title,
-        // description: book.volumeInfo.description,
-        // image: book.volumeInfo.imageLinks?.thumbnail || '',
-        // link: book.volumeInfo.canonicalVolumeLink
+      const showData = items.map((show) => ({
+        showId: show.id,
+        name: show.name,
+        genre: show.genres || ['No genres to display'],
+        summary: show.summary,
+        image: show.image.original || '',
+        url: show.url
       }));
 
-      setSearchedBooks(bookData);
+      setSearchedShows(showData);
       setSearchInput('');
     } catch (err) {
       console.error(err);
@@ -66,9 +65,9 @@ const SearchBooks = () => {
   };
 
   // function to handle saving a book to our database
-  const handleSaveBook = async (bookId) => {
+  const handleSaveShow = async (showId) => {
     // find the book in `searchedBooks` state by the matching id
-    const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
+    const showToSave = searchedShows.find((show) => show.showId === showId);
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
@@ -77,18 +76,18 @@ const SearchBooks = () => {
     }
 
     try {
-      await saveBook({
+      await saveShow({
         variables: {
           userId: userData.data?.me._id,
-          authors: bookToSave.authors,
-          description: bookToSave.description,
-          bookId: bookToSave.bookId,
-          image: bookToSave.image,
-          link: bookToSave.link,
-          title: bookToSave.title
+          showId: show.id,
+          name: show.name,
+          genre: show.genres,
+          summary: show.summary,
+          image: show.image.original,
+          url: show.url
         }
       });
-      setSavedBookIds([...savedBookIds, bookToSave.bookId]);
+      setSavedShowIds([...savedShowIds, showToSave.showId]);
     } catch (e) {
       console.error(e);
     }
@@ -98,7 +97,7 @@ const SearchBooks = () => {
     <>
       <Jumbotron fluid className='text-light bg-dark'>
         <Container>
-          <h1>Search for Books!</h1>
+          <h1>Search for Shows!</h1>
           <Form onSubmit={handleFormSubmit}>
             <Form.Row>
               <Col xs={12} md={8}>
@@ -108,7 +107,7 @@ const SearchBooks = () => {
                   onChange={(e) => setSearchInput(e.target.value)}
                   type='text'
                   size='lg'
-                  placeholder='Search for a book'
+                  placeholder='Search for a show'
                 />
               </Col>
               <Col xs={12} md={4}>
@@ -123,34 +122,34 @@ const SearchBooks = () => {
 
       <Container>
         <h2>
-          {searchedBooks.length
-            ? `Viewing ${searchedBooks.length} results:`
-            : 'Search for a book to begin'}
+          {searchedShows.length
+            ? `Viewing ${searchedShows.length} results:`
+            : 'Search for a show to begin'}
         </h2>
         <CardColumns>
-          {searchedBooks.map((book) => {
+          {searchedShows.map((show) => {
             return (
-              <Card key={book.bookId} border='dark'>
-                <p>{book.name}</p>
-                {book.image ? (
-                  <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' />
+              <Card key={show.showId} border='dark'>
+                <p>{show.name}</p>
+                {show.image ? (
+                  <Card.Img src={show.image} alt={`The cover for ${show.name}`} variant='top' />
                 ) : null}
                 <Card.Body>
-                  <Card.Title>{book.title}</Card.Title>
-                  <p className='small'>Authors: {book.authors}</p>
-                  <Card.Text>{book.description}</Card.Text>
+                  <Card.Title>{show.name}</Card.Title>
+                  <p className='small'>Genre: {show.genre}</p>
+                  <Card.Text>{show.summary}</Card.Text>
                   {Auth.loggedIn() && (
                     <Button
-                      disabled={savedBookIds?.some((savedBookId) => savedBookId === book.bookId)}
+                      disabled={savedShowIds?.some((savedShowId) => savedShowId === show.showId)}
                       className='btn-block btn-info'
-                      onClick={() => handleSaveBook(book.bookId)}>
-                      {savedBookIds?.some((savedBookId) => savedBookId === book.bookId)
-                        ? 'This book has already been saved!'
-                        : 'Save this Book!'}
+                      onClick={() => handleSaveShow(show.showId)}>
+                      {savedShowIds?.some((savedShowId) => savedShowId === show.showId)
+                        ? 'This show has been saved!'
+                        : 'Save this Show!'}
                     </Button>
                   )}
                   <div className='google-link'>
-                    <a href={book.link} target='_blank' rel='noopener noreferrer'>View in Google Books</a>
+                    <a href={show.url} target='_blank' rel='noopener noreferrer'>View Show in TVMaze</a>
                   </div>
                 </Card.Body>
               </Card>
@@ -162,4 +161,4 @@ const SearchBooks = () => {
   );
 };
 
-export default SearchBooks;
+export default SearchShows;

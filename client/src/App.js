@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SearchBooks from './pages/SearchBooks';
-import SavedBooks from './pages/SavedBooks';
+import SearchShows from './pages/SearchShows';
+import SavedShows from './pages/SavedShows';
 import Navbar from './components/Navbar';
 import {
   ApolloClient,
@@ -39,14 +39,14 @@ function App() {
         <>
           <Navbar />
           <Routes>
-            <Route 
-              path='/' 
-              element={<SearchBooks />}
+            <Route
+              path='/'
+              element={<SearchShows />}
             />
-            <Route 
-              path='/saved' 
-              element={<SavedBooks />}
-            /> 
+            <Route
+              path='/saved'
+              element={<SavedShows />}
+            />
             <Route render={() => <h1 className='display-2'>Wrong page!</h1>} />
           </Routes>
         </>
