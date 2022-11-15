@@ -6,7 +6,7 @@ import { useQuery, useMutation } from '@apollo/client';
 
 import Auth from '../utils/auth';
 import { searchShow } from '../utils/API';
-import { saveShowId, getSavedShowIds } from '../utils/localStorage';
+import { saveShowIds, getSavedShowIds } from '../utils/localStorage';
 
 const SearchShows = () => {
 
@@ -28,7 +28,7 @@ const SearchShows = () => {
 
 
   useEffect(() => {
-    return () => saveShowId(savedShowIds);
+    return () => saveShowIds(savedShowIds);
   });
 
   const handleFormSubmit = async (event) => {
@@ -44,11 +44,11 @@ const SearchShows = () => {
         throw new Error('something went wrong!');
       }
 
+      console.log(searchInput);
+
       const { items } = await response.json();
 
-      console.log(items);
-
-      const showData = items.map((show) => ({
+      const showData = items.map(({ show }) => ({
         showId: show.id,
         name: show.name,
         genre: show.genres || ['No genres to display'],
@@ -79,12 +79,12 @@ const SearchShows = () => {
       await saveShow({
         variables: {
           userId: userData.data?.me._id,
-          showId: show.id,
-          name: show.name,
-          genre: show.genres,
-          summary: show.summary,
-          image: show.image.original,
-          url: show.url
+          showId: showToSave.id,
+          name: showToSave.name,
+          genre: showToSave.genres,
+          summary: showToSave.summary,
+          image: showToSave.image.original,
+          url: showToSave.url
         }
       });
       setSavedShowIds([...savedShowIds, showToSave.showId]);
