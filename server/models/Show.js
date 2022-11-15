@@ -12,7 +12,7 @@ const showSchema = new Schema({
     type: String,
     required: true,
   },
-  
+
   image: {
     type: String,
   },
@@ -23,6 +23,10 @@ const showSchema = new Schema({
     type: String,
     required: true,
   },
+  showID: {
+    type: String,
+    required: true
+  }
 });
 
 // const showSchema = new Schema({
