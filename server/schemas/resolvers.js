@@ -44,11 +44,11 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    saveShow: async (parent, { userId, name, genre, image, url, summary, showId }, context) => {
+    saveShow: async (parent, { userId, name, genre, url, summary, showId }, context) => {
       if (context.user) {
         const updatedUser = await User.findOneAndUpdate(
           { _id: userId },
-          { $push: { savedShows: { name, genre, image, url, summary, showId } } },
+          { $push: { savedShows: { name, genre, url, summary, showId } } },
           { new: true, runValidators: true }
         );
 

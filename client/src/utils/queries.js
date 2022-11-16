@@ -12,7 +12,6 @@ export const QUERY_ME = gql`
         name
         genre
         showId
-        image
         url
         summary
       }

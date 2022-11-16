@@ -5,7 +5,7 @@ import { SAVE_SHOW } from '../utils/mutations';
 import { useQuery, useMutation } from '@apollo/client';
 
 import Auth from '../utils/auth';
-import { searchShow } from '../utils/API';
+// import searchShow from '../utils/API';
 import { saveShowIds, getSavedShowIds } from '../utils/localStorage';
 
 const SearchShows = () => {
@@ -28,8 +28,8 @@ const SearchShows = () => {
 
 
   useEffect(() => {
-    return () => saveShowIds(savedShowIds);
-  });
+    return saveShowIds(savedShowIds);
+  }, []);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -38,23 +38,26 @@ const SearchShows = () => {
       return false;
     }
     try {
-      const response = await searchShow(searchInput);
-
+      // const response = await searchShow(searchInput);
+      const response = await fetch(`http://api.tvmaze.com/search/shows?q=${searchInput}`)
+      console.log(response)
       if (!response.ok) {
         throw new Error('something went wrong!');
       }
 
-      console.log(searchInput);
+      const data = await response.json();
+      console.log(data)
 
-      const { items } = await response.json();
+      const show = data;
+      console.log(show);
 
-      const showData = items.map(({ show }) => ({
-        showId: show.id,
-        name: show.name,
-        genre: show.genres || ['No genres to display'],
-        summary: show.summary,
-        image: show.image.original || '',
-        url: show.url
+      const showData = data.map((show) => ({
+        showId: show.show.id,
+        name: show.show.name,
+        genre: show.show.genres || ['No genres to display'],
+        summary: show.show.summary,
+        // image: show.show.image.original || '',
+        url: show.show.url
       }));
 
       setSearchedShows(showData);
@@ -83,7 +86,7 @@ const SearchShows = () => {
           name: showToSave.name,
           genre: showToSave.genres,
           summary: showToSave.summary,
-          image: showToSave.image.original,
+          // image: showToSave.image.original,
           url: showToSave.url
         }
       });

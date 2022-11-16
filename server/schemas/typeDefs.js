@@ -14,7 +14,7 @@ const typeDefs = gql`
     name: [String]
     genre: String
     showId: String
-    image: String
+    
     url: String
     summary: String
   }
@@ -32,7 +32,7 @@ const typeDefs = gql`
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-    saveShow(userId: ID!, name: String!, genre: [String], showId: String!, image: String, url: String, summary: String!): User
+    saveShow(userId: ID!, name: String!, genre: [String], showId: String!,  url: String, summary: String!): User
     removeShow(userId: ID!, showId: String!): User
   }
 `;
