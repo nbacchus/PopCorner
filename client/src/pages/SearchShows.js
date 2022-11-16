@@ -55,8 +55,7 @@ const SearchShows = () => {
         showId: show.show.id,
         name: show.show.name,
         genre: show.show.genres || ['No genres to display'],
-        summary: show.show.summary,
-        // image: show.show.image.original || '',
+        image: show.show.image?.original || '',
         url: show.show.url
       }));
 
@@ -85,8 +84,7 @@ const SearchShows = () => {
           showId: showToSave.id,
           name: showToSave.name,
           genre: showToSave.genres,
-          summary: showToSave.summary,
-          // image: showToSave.image.original,
+          image: showToSave.image,
           url: showToSave.url
         }
       });
@@ -140,7 +138,6 @@ const SearchShows = () => {
                 <Card.Body>
                   <Card.Title>{show.name}</Card.Title>
                   <p className='small'>Genre: {show.genre}</p>
-                  <Card.Text>{show.summary}</Card.Text>
                   {Auth.loggedIn() && (
                     <Button
                       disabled={savedShowIds?.some((savedShowId) => savedShowId === show.showId)}

@@ -56,7 +56,6 @@ const SavedShows = () => {
                 <Card.Body>
                   <Card.Title>{show.name}</Card.Title>
                   <p className='small'>Genre: {show.genre}</p>
-                  <Card.Text>{show.summary}</Card.Text>
                   <Button className='btn-block btn-danger' onClick={() => handleDeleteShow(show.showId)}>
                     Delete this Show!
                   </Button>

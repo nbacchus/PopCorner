@@ -13,7 +13,6 @@ export const QUERY_ME = gql`
         genre
         showId
         url
-        summary
       }
     }
   }
