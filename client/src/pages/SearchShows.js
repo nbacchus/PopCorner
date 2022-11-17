@@ -84,7 +84,7 @@ const SearchShows = () => {
 
   return (
     <>
-      <Jumbotron fluid className='text-light bg-dark'>
+      <Jumbotron fluid className='text-light'>
         <Container>
           <h1>Search for Shows!</h1>
           <Form onSubmit={handleFormSubmit}>
@@ -119,7 +119,7 @@ const SearchShows = () => {
           {searchedShows.map((show) => {
             return (
               <Card key={show.showId} border='dark'>
-                <p>{show.name}</p>
+                <h2 className="card-title">{show.name}</h2>
                 {show.image ? (
                   <Card.Img src={show.image} alt={`The cover for ${show.name}`} variant='top' />
                 ) : null}
