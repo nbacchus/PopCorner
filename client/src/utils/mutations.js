@@ -26,8 +26,8 @@ export const ADD_USER = gql`
 `;
 
 export const SAVE_SHOW = gql`
-  mutation saveShow($userId: ID!, $name: String!, $genre: [String], $showId: String!, $image: String, $url: String, ) {
-    saveShow(userId: $userId, name: $name, genre: $genre, showId: $showId, image: $image, url: $url) {
+  mutation saveShow($userId: ID!, $name: String!, $genre: [String], $showId: String!, $url: String, ) {
+    saveShow(userId: $userId, name: $name, genre: $genre, showId: $showId, url: $url) {
       _id
       username
       showCount
