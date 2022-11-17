@@ -5,7 +5,7 @@ import { QUERY_ME } from '../utils/queries';
 import { REMOVE_SHOW } from '../utils/mutations';
 import { removeShowId } from '../utils/localStorage';
 import { useQuery } from '@apollo/client';
-
+// test
 
 const SavedShows = () => {
 
@@ -56,7 +56,6 @@ const SavedShows = () => {
                 <Card.Body>
                   <Card.Title>{show.name}</Card.Title>
                   <p className='small'>Genre: {show.genre}</p>
-                  <Card.Text>{show.summary}</Card.Text>
                   <Button className='btn-block btn-danger' onClick={() => handleDeleteShow(show.showId)}>
                     Delete this Show!
                   </Button>

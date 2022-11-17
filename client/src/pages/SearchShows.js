@@ -3,21 +3,13 @@ import { Jumbotron, Container, Col, Form, Button, Card, CardColumns } from 'reac
 import { QUERY_ME } from '../utils/queries';
 import { SAVE_SHOW } from '../utils/mutations';
 import { useQuery, useMutation } from '@apollo/client';
-
 import Auth from '../utils/auth';
-// import searchShow from '../utils/API';
 import { saveShowIds, getSavedShowIds } from '../utils/localStorage';
 
 const SearchShows = () => {
-
   const userData = useQuery(QUERY_ME);
-
-  // holding returned google api data
   const [searchedShows, setSearchedShows] = useState([]);
-  // holding our search field data
   const [searchInput, setSearchInput] = useState('');
-
-  // hold saved bookId values
   const [savedShowIds, setSavedShowIds] = useState(getSavedShowIds());
 
   const [saveShow] = useMutation(SAVE_SHOW, {
@@ -38,7 +30,6 @@ const SearchShows = () => {
       return false;
     }
     try {
-      // const response = await searchShow(searchInput);
       const response = await fetch(`http://api.tvmaze.com/search/shows?q=${searchInput}`)
       console.log(response)
       if (!response.ok) {
@@ -55,8 +46,7 @@ const SearchShows = () => {
         showId: show.show.id,
         name: show.show.name,
         genre: show.show.genres || ['No genres to display'],
-        summary: show.show.summary,
-        // image: show.show.image.original || '',
+        image: show.show.image?.original || '',
         url: show.show.url
       }));
 
@@ -67,11 +57,8 @@ const SearchShows = () => {
     }
   };
 
-  // function to handle saving a book to our database
   const handleSaveShow = async (showId) => {
-    // find the book in `searchedBooks` state by the matching id
     const showToSave = searchedShows.find((show) => show.showId === showId);
-    // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
@@ -85,8 +72,7 @@ const SearchShows = () => {
           showId: showToSave.id,
           name: showToSave.name,
           genre: showToSave.genres,
-          summary: showToSave.summary,
-          // image: showToSave.image.original,
+          image: showToSave.image,
           url: showToSave.url
         }
       });
@@ -140,7 +126,6 @@ const SearchShows = () => {
                 <Card.Body>
                   <Card.Title>{show.name}</Card.Title>
                   <p className='small'>Genre: {show.genre}</p>
-                  <Card.Text>{show.summary}</Card.Text>
                   {Auth.loggedIn() && (
                     <Button
                       disabled={savedShowIds?.some((savedShowId) => savedShowId === show.showId)}
