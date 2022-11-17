@@ -15,7 +15,7 @@ const AppNavbar = () => {
       <Navbar bg='dark' variant='dark' expand='lg'>
         <Container fluid>
           <Navbar.Brand as={Link} to='/'>
-            TV Show Search
+            Pop Corner
           </Navbar.Brand>
           <Navbar.Toggle aria-controls='navbar' />
           <Navbar.Collapse id='navbar'>
@@ -23,7 +23,7 @@ const AppNavbar = () => {
               <Nav.Link as={Link} to='/'>
                 Search For Shows
               </Nav.Link>
-              {/* if user is logged in show saved books and logout */}
+              {/* if user is logged in show saved shows and logout */}
               {Auth.loggedIn() ? (
                 <>
                   <Nav.Link as={Link} to='/saved'>
